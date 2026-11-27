@@ -1,0 +1,3 @@
+{
+  "install": "sed -i '/case \\$- in/,/esac/d' ~/.bashrc 2>/dev/null || true && (command -v ffmpeg >/dev/null 2>&1 || (sudo DEBIAN_FRONTEND=noninteractive apt-get update -qq && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq ffmpeg fonts-noto-cjk)) && pip install --quiet --no-input edge-tts httpx && pnpm install --frozen-lockfile && pnpm exec remotion browser ensure"
+}
