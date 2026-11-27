@@ -22,6 +22,14 @@ import {
   Top10Cinema,
   TOP10_CINEMA_FRAMES,
 } from './compositions/Top10Cinema';
+import {
+  DetectiveCase10s,
+  DETECTIVE_10S_FRAMES,
+} from './compositions/DetectiveCase10s';
+import {
+  WeeklyDetectiveFull,
+  WEEKLY_DETECTIVE_FULL_FRAMES,
+} from './compositions/WeeklyDetectiveFull';
 import { theme } from './kit/theme';
 
 const parsedDefaultProps = WeeklyRankingPropsSchema.parse(sampleData);
@@ -29,6 +37,24 @@ const parsedDefaultProps = WeeklyRankingPropsSchema.parse(sampleData);
 export const RemotionRoot: React.FC = () => {
   return (
     <>
+      <Composition
+        id="WeeklyDetectiveFullVertical"
+        component={WeeklyDetectiveFull}
+        durationInFrames={WEEKLY_DETECTIVE_FULL_FRAMES}
+        fps={theme.fps}
+        width={theme.vertical.width}
+        height={theme.vertical.height}
+      />
+
+      <Composition
+        id="DetectiveCase10sVertical"
+        component={DetectiveCase10s}
+        durationInFrames={DETECTIVE_10S_FRAMES}
+        fps={theme.fps}
+        width={theme.vertical.width}
+        height={theme.vertical.height}
+      />
+
       <Composition
         id="Top10CinemaVertical"
         component={Top10Cinema}
