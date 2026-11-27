@@ -1,0 +1,24 @@
+[
+  {
+    "id": "intro",
+    "text": "兄弟们，这周 GitHub 开源圈太炸了！15 秒先看两个最离谱的飙升项目。",
+    "gapAfterMs": 260
+  },
+  {
+    "id": "rank-1",
+    "text": "第一名 VIctory，一周狂飙一万三千多星，硬核大佬直接用 Rust 尝试在电脑上跑 GTA 6。",
+    "ttsText": "第一名 Victory，一周狂飙一万三千多星，硬核大佬直接用 Rust 尝试在电脑上跑 G T A 六。",
+    "gapAfterMs": 300
+  },
+  {
+    "id": "rank-2",
+    "text": "再看 fast-anything，不用把整个项目重写，让 AI 自动找出最慢的 5% 代码直接提速。",
+    "ttsText": "再看 fast anything，不用把整个项目崇写，让 A I 自动找出最慢的百分之五代码直接提速。",
+    "gapAfterMs": 260
+  },
+  {
+    "id": "outro",
+    "text": "想看完整 Top 10，点赞关注咱们下期见！",
+    "ttsText": "想看完整 Top 十，点赞关注咱们下期见！"
+  }
+]

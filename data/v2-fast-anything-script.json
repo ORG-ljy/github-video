@@ -1,0 +1,25 @@
+[
+  {
+    "id": "hook",
+    "text": "别再傻傻把整个项目用 Rust 重写了！GitHub 刚爆火一个神器，只改 5% 代码直接起飞。",
+    "ttsText": "别再傻傻把整个项目用 Rust 崇写了！get hub 刚爆火一个神器，只改百分之五代码直接起飞。",
+    "gapAfterMs": 220
+  },
+  {
+    "id": "evidence",
+    "text": "它叫 fast-anything，接管 Claude Code，先帮你把 Python 里最慢的几个函数精准揪出来。",
+    "ttsText": "它叫 fast anything，接管 Claude Code，先帮你把 Python 里最慢的几个函数精准揪出来。",
+    "gapAfterMs": 220
+  },
+  {
+    "id": "mechanism",
+    "text": "接着 AI 只把这 5% 热点代码转成 Rust，还会自动跑等价测试，性能直接拉满还不怕改出 Bug。",
+    "ttsText": "接着 A I 只把这百分之五热点代码转成 Rust，还会自动跑等价测试，性能直接拉满还不怕改出 Bug。",
+    "gapAfterMs": 220
+  },
+  {
+    "id": "outro",
+    "text": "保留 Python 效率，白嫖 Rust 性能，项目放这，关注看更多狠活！",
+    "ttsText": "保留 Python 效率，白嫖 Rust 性能，项目放这，关注看更多狠活！"
+  }
+]

@@ -103,17 +103,20 @@ def synthesize_segment(
     model: str,
     voice_uri: str,
     text: str,
-    out_mp3: Path,
+    out_audio: Path,
     speed: float = 1.0,
+    gain: float = -6.0,
 ) -> None:
+    """调用硅基流动 TTS 接口。必须默认设置 gain=-6.0，防止服务端 float->int16 溢出回绕爆音。"""
     payload = json.dumps(
         {
             "model": model,
             "input": text,
             "voice": voice_uri,
-            "response_format": "mp3",
+            "response_format": "wav",
             "sample_rate": 44100,
             "speed": speed,
+            "gain": gain,
         }
     ).encode("utf-8")
     req = urllib.request.Request(
@@ -126,7 +129,7 @@ def synthesize_segment(
         method="POST",
     )
     with urllib.request.urlopen(req, timeout=90) as resp:
-        out_mp3.write_bytes(resp.read())
+        out_audio.write_bytes(resp.read())
 
 
 def probe_duration_sec(audio_path: Path) -> float:
@@ -146,15 +149,15 @@ def probe_duration_sec(audio_path: Path) -> float:
     return float(out)
 
 
-def trim_and_fade_segment(in_mp3: Path, out_wav: Path, fade_sec: float = 0.015) -> float:
-    """裁切首尾多余静音并加柔和淡入淡出，统一为 44.1kHz 单声道 WAV（暂不做响度推升，防二次叠加炸麦）。"""
+def trim_and_fade_segment(in_mp3: Path, out_wav: Path, fade_sec: float = 0.008) -> float:
+    """裁切首尾死静音并加极短淡入淡出（阈值 -55dB，防止 -6dB 留空音频被误切轻辅音导致吞字）。"""
     tmp_wav = out_wav.with_suffix(".tmp.wav")
     trim_af = (
-        "silenceremove=start_periods=1:start_silence=0.04:start_threshold=-42dB,"
+        "silenceremove=start_periods=1:start_silence=0.02:start_threshold=-55dB,"
         "areverse,"
-        "silenceremove=start_periods=1:start_silence=0.04:start_threshold=-42dB,"
+        "silenceremove=start_periods=1:start_silence=0.02:start_threshold=-55dB,"
         "areverse,"
-        "aformat=sample_rates=44100:channel_layouts=mono"
+        "aformat=sample_rates=48000:channel_layouts=mono"
     )
     subprocess.check_call(
         ["ffmpeg", "-y", "-v", "error", "-i", str(in_mp3), "-af", trim_af, "-c:a", "pcm_s16le", str(tmp_wav)]
@@ -172,9 +175,10 @@ def trim_and_fade_segment(in_mp3: Path, out_wav: Path, fade_sec: float = 0.015) 
 def master_full_track(concat_wav: Path, out_mp3: Path, bgm_path: Path | None = None, bgm_db: float = -24.0) -> None:
     """整条音轨单次母带处理：高通 + 柔和压缩(makeup=1) + EBU R128 响度统一(TP=-2.0) + 峰值限制(-1.5dB)。"""
     master_af = (
-        "highpass=f=80,"
+        "highpass=f=90,"
         "acompressor=threshold=-18dB:ratio=2:attack=15:release=150:makeup=1,"
         "loudnorm=I=-16:TP=-2.0:LRA=11,"
+        "aresample=48000,aformat=sample_rates=48000:channel_layouts=mono,"
         "alimiter=limit=-1.5dB:level=false"
     )
     if bgm_path is None:
@@ -183,7 +187,7 @@ def master_full_track(concat_wav: Path, out_mp3: Path, bgm_path: Path | None = N
                 "ffmpeg", "-y", "-v", "error",
                 "-i", str(concat_wav),
                 "-af", master_af,
-                "-ac", "1", "-ar", "44100", "-b:a", "128k",
+                "-ac", "1", "-ar", "48000", "-b:a", "128k",
                 str(out_mp3),
             ]
         )
@@ -192,9 +196,9 @@ def master_full_track(concat_wav: Path, out_mp3: Path, bgm_path: Path | None = N
         fade_out_st = max(0.0, voice_dur - 1.2)
         filter_complex = (
             f"[0:a]{master_af}[v];"
-            f"[1:a]aformat=sample_rates=44100:channel_layouts=mono,"
+            f"[1:a]aresample=48000,aformat=sample_rates=48000:channel_layouts=mono,"
             f"volume={bgm_db}dB,afade=t=in:st=0:d=0.6,afade=t=out:st={fade_out_st:.2f}:d=1.2[b];"
-            f"[v][b]amix=inputs=2:duration=first:dropout_transition=2,alimiter=limit=-1.5dB:level=false[out]"
+            f"[v][b]amix=inputs=2:duration=first:normalize=0,alimiter=limit=-1.5dB:level=false[out]"
         )
         subprocess.check_call(
             [
@@ -203,7 +207,7 @@ def master_full_track(concat_wav: Path, out_mp3: Path, bgm_path: Path | None = N
                 "-stream_loop", "-1", "-i", str(bgm_path),
                 "-filter_complex", filter_complex,
                 "-map", "[out]",
-                "-ac", "1", "-ar", "44100", "-b:a", "128k",
+                "-ac", "1", "-ar", "48000", "-b:a", "128k",
                 str(out_mp3),
             ]
         )
@@ -237,6 +241,7 @@ def main() -> None:
     parser.add_argument("--voice", default=DEFAULT_VOICE_URI, help=f"声纹 URI（默认 {DEFAULT_VOICE_URI}）")
     parser.add_argument("--model", default=DEFAULT_MODEL, help=f"模型名称（默认 {DEFAULT_MODEL}）")
     parser.add_argument("--speed", type=float, default=1.0, help="语速倍率（默认 1.0）")
+    parser.add_argument("--gain", type=float, default=-6.0, help="硅基流动服务端增益 dB（默认 -6.0，防止 int16 溢出回绕爆音）")
     parser.add_argument("--gap-ms", type=int, default=260, help="段间默认气口毫秒数（默认 260）")
     parser.add_argument("--dict", default=str(DEFAULT_DICT_PATH), help="发音词典 JSON 路径")
     parser.add_argument("--bgm", help="可选：背景音乐文件路径（MP3/WAV）")
@@ -280,12 +285,14 @@ def main() -> None:
             tts_text = seg.get("ttsText") or normalize_for_tts(display_text, pdict)
             gap_after_ms = int(seg.get("gapAfterMs", args.gap_ms))
 
-            raw_mp3 = tmp / f"{idx:03d}_raw.mp3"
+            raw_wav = tmp / f"{idx:03d}_raw.wav"
             trim_wav = tmp / f"{idx:03d}_trim.wav"
 
             print(f"[{idx + 1}/{len(segments)}] 合成 {seg_id}: {tts_text}")
-            synthesize_segment(api_key, base_url, args.model, args.voice, tts_text, raw_mp3, speed=args.speed)
-            dur_sec = trim_and_fade_segment(raw_mp3, trim_wav)
+            synthesize_segment(
+                api_key, base_url, args.model, args.voice, tts_text, raw_wav, speed=args.speed, gain=args.gain
+            )
+            dur_sec = trim_and_fade_segment(raw_wav, trim_wav)
             dur_ms = int(round(dur_sec * 1000))
 
             start_ms = cursor_ms
@@ -310,7 +317,7 @@ def main() -> None:
                     [
                         "ffmpeg", "-y", "-v", "error",
                         "-f", "lavfi", "-t", f"{gap_after_ms / 1000.0:.3f}",
-                        "-i", "anullsrc=r=44100:cl=mono",
+                        "-i", "anullsrc=r=48000:cl=mono",
                         "-c:a", "pcm_s16le", str(gap_wav),
                     ]
                 )

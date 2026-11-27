@@ -1,0 +1,78 @@
+{
+  "issueTitle": "GitHub 一周热门工具排行",
+  "weekLabel": "2026 W48",
+  "subtitle": "统计自 2026-11-20 以来 Star 增长最快的开源项目",
+  "outroTitle": "关注我，每周精选 GitHub 宝藏工具",
+  "outroSubtitle": "点赞 · 收藏 · 评论区告诉我你最想看哪个项目",
+  "introDurationSec": 2.5,
+  "itemDurationSec": 4.5,
+  "outroDurationSec": 2,
+  "captions": [],
+  "items": [
+    {
+      "rank": 1,
+      "name": "VIctory",
+      "fullName": "Marvisak/VIctory",
+      "tagline": "An attempt at running GTA VI on PC",
+      "description": "An attempt at running GTA VI on PC",
+      "stars": 13601,
+      "language": "Rust",
+      "highlights": [],
+      "url": "https://github.com/Marvisak/VIctory"
+    },
+    {
+      "rank": 2,
+      "name": "xcl",
+      "fullName": "xcl-dev/xcl",
+      "tagline": "Xbox Series compatibility layer for Window",
+      "description": "Xbox Series compatibility layer for Windows - runs console game code natively, reimplements the console system libraries and recompiles RDNA2 shaders to DXIL",
+      "stars": 8663,
+      "language": "Rust",
+      "highlights": [
+        "#d3d12",
+        "#gdk",
+        "#rdna2",
+        "#xbox"
+      ],
+      "url": "https://github.com/xcl-dev/xcl"
+    },
+    {
+      "rank": 3,
+      "name": "portwatch-vi",
+      "fullName": "4lwayz/portwatch-vi",
+      "tagline": "Does GTA VI run on PC yet? A live tracker ",
+      "description": "Does GTA VI run on PC yet? A live tracker of community recompilation and emulation efforts, updated daily.",
+      "stars": 6233,
+      "language": "JavaScript",
+      "highlights": [],
+      "url": "https://github.com/4lwayz/portwatch-vi"
+    },
+    {
+      "rank": 4,
+      "name": "fast-anything",
+      "fullName": "EL4CTEO/fast-anything",
+      "tagline": "Don't rewrite it in Rust. Rewrite the 5% t",
+      "description": "Don't rewrite it in Rust. Rewrite the 5% that's slow: profile Python, Node or Ruby apps, port the hot functions with your coding agent, prove they behave the same.",
+      "stars": 4371,
+      "language": "Rust",
+      "highlights": [
+        "#agent-skills",
+        "#ai-agents",
+        "#claude-code",
+        "#claude-code-plugin"
+      ],
+      "url": "https://github.com/EL4CTEO/fast-anything"
+    },
+    {
+      "rank": 5,
+      "name": "xnulinux",
+      "fullName": "AFK-surf/xnulinux",
+      "tagline": "XNU as a loadable kernel module inside Lin",
+      "description": "XNU as a loadable kernel module inside Linux (macOS personality for arm64 Linux)",
+      "stars": 4305,
+      "language": "C",
+      "highlights": [],
+      "url": "https://github.com/AFK-surf/xnulinux"
+    }
+  ]
+}

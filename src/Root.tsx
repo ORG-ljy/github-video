@@ -6,6 +6,22 @@ import {
   WeeklyRanking,
   calcWeeklyRankingDurationFrames,
 } from './compositions/WeeklyRanking';
+import {
+  MangaDeepDive,
+  MANGA_DEEP_DIVE_FRAMES,
+} from './compositions/MangaDeepDive';
+import {
+  VibeCinemaDeepDive,
+  VIBE_CINEMA_FRAMES,
+} from './compositions/VibeCinemaDeepDive';
+import {
+  AnimeCinemaV5,
+  ANIME_CINEMA_V5_FRAMES,
+} from './compositions/AnimeCinemaV5';
+import {
+  Top10Cinema,
+  TOP10_CINEMA_FRAMES,
+} from './compositions/Top10Cinema';
 import { theme } from './kit/theme';
 
 const parsedDefaultProps = WeeklyRankingPropsSchema.parse(sampleData);
@@ -13,6 +29,42 @@ const parsedDefaultProps = WeeklyRankingPropsSchema.parse(sampleData);
 export const RemotionRoot: React.FC = () => {
   return (
     <>
+      <Composition
+        id="Top10CinemaVertical"
+        component={Top10Cinema}
+        durationInFrames={TOP10_CINEMA_FRAMES}
+        fps={theme.fps}
+        width={theme.vertical.width}
+        height={theme.vertical.height}
+      />
+
+      <Composition
+        id="AnimeCinemaV5Vertical"
+        component={AnimeCinemaV5}
+        durationInFrames={ANIME_CINEMA_V5_FRAMES}
+        fps={theme.fps}
+        width={theme.vertical.width}
+        height={theme.vertical.height}
+      />
+
+      <Composition
+        id="VibeCinemaVertical"
+        component={VibeCinemaDeepDive}
+        durationInFrames={VIBE_CINEMA_FRAMES}
+        fps={theme.fps}
+        width={theme.vertical.width}
+        height={theme.vertical.height}
+      />
+
+      <Composition
+        id="MangaDeepDiveVertical"
+        component={MangaDeepDive}
+        durationInFrames={MANGA_DEEP_DIVE_FRAMES}
+        fps={theme.fps}
+        width={theme.vertical.width}
+        height={theme.vertical.height}
+      />
+
       <Composition
         id="WeeklyRankingVertical"
         component={WeeklyRanking}

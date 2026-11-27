@@ -1,0 +1,84 @@
+{
+  "issueTitle": "GitHub 一周热门工具排行",
+  "weekLabel": "2026 W48 · 风格预览",
+  "subtitle": "本周开源圈飙升最快项目抢先看",
+  "outroTitle": "想看完整 Top 10 榜单？",
+  "outroSubtitle": "点赞 · 关注 · 评论区告诉我你的风格建议",
+  "introDurationSec": 6.0,
+  "itemDurationSec": 7.15,
+  "outroDurationSec": 3.2,
+  "audioSrc": "audio/preview-15s.mp3",
+  "captions": [
+    {
+      "startMs": 0,
+      "endMs": 2650,
+      "text": "兄弟们，这周 GitHub 开源圈太炸了！"
+    },
+    {
+      "startMs": 2650,
+      "endMs": 5347,
+      "text": "15 秒先看两个最离谱的飙升项目"
+    },
+    {
+      "startMs": 5607,
+      "endMs": 8800,
+      "text": "第一名 VIctory，一周狂飙 13,600+ 星"
+    },
+    {
+      "startMs": 8800,
+      "endMs": 12297,
+      "text": "硬核大佬直接用 Rust 尝试在电脑上跑 GTA 6"
+    },
+    {
+      "startMs": 12597,
+      "endMs": 15600,
+      "text": "再看 fast-anything，不用把整个项目重写"
+    },
+    {
+      "startMs": 15600,
+      "endMs": 18865,
+      "text": "让 AI 自动找出最慢的 5% 代码直接提速"
+    },
+    {
+      "startMs": 19125,
+      "endMs": 21670,
+      "text": "想看完整 Top 10，点赞关注咱们下期见！"
+    }
+  ],
+  "items": [
+    {
+      "rank": 1,
+      "name": "VIctory",
+      "fullName": "Marvisak/VIctory",
+      "tagline": "硬核用 Rust 尝试在 PC 上运行 GTA VI",
+      "description": "本周 GitHub 现象级飙升项目：探索在 PC 端直接运行 GTA VI 的开源兼容层尝试，上线一周即突破 1.3 万 Star。",
+      "stars": 13601,
+      "weeklyStars": 13601,
+      "language": "Rust",
+      "highlights": [
+        "Rust 编写",
+        "一周 +13.6k Star",
+        "PC 端运行尝试",
+        "全网热议"
+      ],
+      "url": "https://github.com/Marvisak/VIctory"
+    },
+    {
+      "rank": 4,
+      "name": "fast-anything",
+      "fullName": "EL4CTEO/fast-anything",
+      "tagline": "不用整库重写：让 AI 只把最慢的 5% 用 Rust 重写",
+      "description": "自动剖析 Python / Node / Ruby 应用性能热点，交给 Claude Code 等 AI Agent 精准改写核心慢函数并验证行为一致。",
+      "stars": 4371,
+      "weeklyStars": 4371,
+      "language": "Rust",
+      "highlights": [
+        "#agent-skills",
+        "#claude-code",
+        "精准热点加速",
+        "自动等价验证"
+      ],
+      "url": "https://github.com/EL4CTEO/fast-anything"
+    }
+  ]
+}

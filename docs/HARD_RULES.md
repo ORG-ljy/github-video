@@ -11,3 +11,24 @@
    - `src/kit/`（L1 共享引擎层）：主题 token、动效函数、通用组件。
    - `src/compositions/`（L2 出片编排层）：只做场景组装与时间线编排。
    - `data/` + `public/`（L3 数据与素材层）：榜单 JSON、配音 MP3、SRT 字幕、音效素材。
+
+## 音频与硅基流动 TTS 硬规则（防爆音铁律）
+
+以下规则基于波形级实测定位，所有配音与混音脚本必须严格遵守：
+
+1. **硅基流动 API 必须传 `gain: -6.0`（防 16-bit 整数溢出回绕爆音）**：
+   - 实测 `FunAudioLLM/CosyVoice2-0.5B` 在默认 `gain: 0.0` 下，对高能量参考声纹（如 `ljy-hook-clean`）会在服务端 float → int16 量化时发生**符号翻转回绕**（相邻采样跳变达 `65,000+`），产生无法靠后期消除的刺耳爆音。
+   - 请求 `/v1/audio/speech` 时**强制传入 `"gain": -6.0`**（范围 `-4.0 ~ -8.0`），并优先拉取无损 `response_format: "wav"`，可将溢出尖峰降为 **0**，再由本地 FFmpeg 统一拉升到标准响度。
+2. **FFmpeg `loudnorm` 后必须接 `aresample=48000`**：
+   - `loudnorm` 滤镜内部会自动升频至 `192kHz`（导出 AAC 时被截断为 `96kHz`），与 `44.1kHz` BGM 混音会导致杂音与音频提前截断。
+   - 必须在 `loudnorm` 之后显式追加 `aresample=48000,aformat=sample_rates=48000:channel_layouts=stereo`（或 `mono`），输出统一为标准 **`48kHz` AAC**，并在 `amix` 中设置 `normalize=0`。
+3. **单主声纹 + 无情绪指令 + 单次母带**：
+   - 全片锁定单一主声纹 `ljy-hook-clean`（`speech:your-voice-name:xxxx:yyyy`），不叠加 `<|endofprompt|>` 情绪指令（防止语气变形与能量过载）。
+   - 压缩器 `acompressor` 的 `makeup` 必须设为 `1`（线性 0dB 增益，严禁设 `2` 造成 +6dB 过载），仅在整轨拼接完成后执行**单次** `loudnorm=I=-16:TP=-2.0:LRA=11` + `alimiter=limit=-1.5dB:level=false`。
+4. **双轨发音词典（展示与口播分离）**：
+   - 画面与字幕保留原词，送入 TTS 前统一过 [data/pronunciation-dict.json](../data/pronunciation-dict.json)（已实测固化：`GitHub → get hub`、`Cursor → curser`、`DevTools → Dev Tools`、`一行 → 一航` 等）。
+5. **禁止使用高能量低频合成音效**：
+   - 严禁叠加未过滤的低频正弦波重击（如 `boom.wav`），以免在手机/笔记本扬声器上听感类似噗麦爆音；切镜音效音量控制在 `0.14–0.15` 以内，BGM 控制在 `-24dB ~ -22dB`。
+6. **防吞字规则（适配 `gain: -6.0` 低电平源音频）**：
+   - 使用 `gain: -6.0` 拉取源音频后，首尾静音裁切 `silenceremove` 的阈值必须放宽至 **`-55dB`**（严禁使用 `-42dB`，否则会误切轻辅音和尾音导致吞字），淡入淡出控制在 `8ms`，且默认使用原速 **`speed: 1.0`**（避免加速压缩短词）。
+
