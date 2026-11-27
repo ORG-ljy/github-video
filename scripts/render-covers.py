@@ -322,9 +322,18 @@ def write_publish_copy(cfg: dict, out_dir: Path) -> Path:
     return md_path
 
 
+def resolve_private_repo() -> Path:
+    env_val = os.environ.get("PRIVATE_ASSETS_REPO", "").strip()
+    if env_val:
+        p = Path(env_val)
+        return p if p.is_absolute() else (REPO_ROOT / p).resolve()
+    return (REPO_ROOT.parent / "github-video-private").resolve()
+
+
 def main() -> None:
-    parser = argparse.ArgumentParser(description="生成本期 3:4 & 4:3 抖音封面及合规发布文案")
-    parser.add_argument("config", help="期数配置 JSON 路径，例如 data/episodes/ep02.json")
+    parser = argparse.ArgumentParser(description="生成本期 3:4 & 4:3 抖音封面及合规发布文案（默认输出至私有交付仓）")
+    parser.add_argument("config", help="期数配置 JSON 路径，例如 ../github-video-private/episodes/ep02/ep02.json")
+    parser.add_argument("--out-dir", help="自定义输出目录（默认输出到 ../github-video-private/episodes/<slug>）")
     parser.add_argument("--dry-run", action="store_true", help="仅校验 JSON 与标题字数，不写文件")
     args = parser.parse_args()
 
@@ -341,10 +350,19 @@ def main() -> None:
         return
 
     slug = cfg["episode_slug"]
-    out_dir = REPO_ROOT / "releases" / slug
+    private_repo = resolve_private_repo()
+    out_dir = Path(args.out_dir) if args.out_dir else (private_repo / "episodes" / slug)
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    hero_uri = b64_img(REPO_ROOT / "public/images/ip/remix-a-hero.jpg")
+    hero_candidates = [
+        private_repo / "brand/ip/remix-a-hero.jpg",
+        REPO_ROOT / "public/images/ip/remix-a-hero.jpg",
+    ]
+    hero_path = next((p for p in hero_candidates if p.exists()), None)
+    if not hero_path:
+        raise FileNotFoundError(f"未找到 IP 原图 remix-a-hero.jpg，请检查私有仓库: {private_repo}")
+
+    hero_uri = b64_img(hero_path)
     p_3x4 = out_dir / f"cover-{slug}-3x4.png"
     p_4x3 = out_dir / f"cover-{slug}-4x3.png"
 

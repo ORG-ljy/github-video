@@ -23,7 +23,7 @@
    - `loudnorm` 滤镜内部会自动升频至 `192kHz`（导出 AAC 时被截断为 `96kHz`），与 `44.1kHz` BGM 混音会导致杂音与音频提前截断。
    - 必须在 `loudnorm` 之后显式追加 `aresample=48000,aformat=sample_rates=48000:channel_layouts=stereo`（或 `mono`），输出统一为标准 **`48kHz` AAC**，并在 `amix` 中设置 `normalize=0`。
 3. **单主声纹 + 无情绪指令 + 单次母带**：
-   - 全片锁定单一主声纹 `ljy-hook-clean`（`speech:your-voice-name:xxxx:yyyy`），不叠加 `<|endofprompt|>` 情绪指令（防止语气变形与能量过载）。
+   - 全片锁定单一主声纹（通过 `.env` 中的 `SILICONFLOW_VOICE_URI` 注入，禁止把私人克隆声纹 URI 写死在公开仓库代码里），不叠加 `<|endofprompt|>` 情绪指令（防止语气变形与能量过载）。
    - 压缩器 `acompressor` 的 `makeup` 必须设为 `1`（线性 0dB 增益，严禁设 `2` 造成 +6dB 过载），仅在整轨拼接完成后执行**单次** `loudnorm=I=-16:TP=-2.0:LRA=11` + `alimiter=limit=-1.5dB:level=false`。
 4. **双轨发音词典（展示与口播分离）**：
    - 画面与字幕保留原词，送入 TTS 前统一过 [data/pronunciation-dict.json](../data/pronunciation-dict.json)（实测固化：**`GitHub` 必须保留原拼写透传，禁止改成 `get hub` / `Git Hub` / `Github`**；`Cursor → curser`、`DevTools → Dev Tools`、`一行 → 一航` 等）。

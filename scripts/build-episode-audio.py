@@ -26,22 +26,29 @@ import wave
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-VOICE_URI = "speech:your-voice-name:xxxx:yyyy"
 BGM_PATH = REPO_ROOT / "public/sfx/detective-acid-jazz-112-full.wav"
 DICT_PATH = REPO_ROOT / "data/pronunciation-dict.json"
 FPS = 30
 
 
-def load_api_key() -> str:
-    key = os.environ.get("SILICONFLOW_API_KEY", "").strip()
-    if key:
-        return key
+def load_env_var(name: str) -> str:
+    val = os.environ.get(name, "").strip()
+    if val:
+        return val
     env_file = REPO_ROOT / ".env"
     if env_file.exists():
         for line in env_file.read_text(encoding="utf-8").splitlines():
-            if line.strip().startswith("SILICONFLOW_API_KEY="):
+            if line.strip().startswith(f"{name}="):
                 return line.split("=", 1)[1].strip().strip('"').strip("'")
-    raise RuntimeError("未找到 SILICONFLOW_API_KEY（请配置环境变量或 .env）")
+    raise RuntimeError(f"未找到 {name}（请在环境变量或 .env 中配置，详见 .env.example）")
+
+
+def load_api_key() -> str:
+    return load_env_var("SILICONFLOW_API_KEY")
+
+
+def load_voice_uri() -> str:
+    return load_env_var("SILICONFLOW_VOICE_URI")
 
 
 def apply_pronunciation_dict(text: str) -> str:
@@ -57,11 +64,11 @@ def apply_pronunciation_dict(text: str) -> str:
     return text
 
 
-def synthesize_act(api_key: str, text: str, out_wav: Path) -> None:
+def synthesize_act(api_key: str, voice_uri: str, text: str, out_wav: Path) -> None:
     payload = json.dumps({
         "model": "FunAudioLLM/CosyVoice2-0.5B",
         "input": apply_pronunciation_dict(text),
-        "voice": VOICE_URI,
+        "voice": voice_uri,
         "response_format": "wav",
         "sample_rate": 44100,
         "speed": 1.0,
@@ -134,7 +141,7 @@ def run_cmd(cmd: list[str]) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="生成本期 5 幕语音 + ASR 校验 + 48kHz 零爆音母带")
-    parser.add_argument("config", help="期数配置 JSON 路径，例如 data/episodes/ep02.json")
+    parser.add_argument("config", help="期数配置 JSON 路径，例如 ../github-video-private/episodes/ep02/ep02.json")
     parser.add_argument("--only", help="仅重新生成指定 act id（例如 act1_rank3）")
     parser.add_argument("--skip-asr", action="store_true", help="跳过 SenseVoiceSmall ASR 检查（不推荐）")
     args = parser.parse_args()
@@ -144,6 +151,7 @@ def main() -> None:
         cfg_path = REPO_ROOT / cfg_path
     cfg = json.loads(cfg_path.read_text(encoding="utf-8"))
     api_key = load_api_key()
+    voice_uri = load_voice_uri()
 
     slug = cfg["episode_slug"]
     out_dir = REPO_ROOT / "public/audio" / slug
@@ -159,7 +167,7 @@ def main() -> None:
 
         if (not args.only) or (args.only == aid) or (not raw_wav.exists()):
             print(f"[TTS] 合成 {aid} (speed=1.0, gain=-6.0)...")
-            synthesize_act(api_key, act["tts_text"], raw_wav)
+            synthesize_act(api_key, voice_uri, act["tts_text"], raw_wav)
             raw_stat = wav_stats(raw_wav)
             print(f"      raw: dur={raw_stat['duration_sec']}s, peak={raw_stat['peak']}, clips={raw_stat['clips']}, wrap_jumps={raw_stat['wrap_jumps']}")
             if raw_stat["wrap_jumps"] > 0:

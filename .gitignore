@@ -1,6 +1,5 @@
 node_modules/
 out/
-releases/
 .remotion/
 .cache/
 .venv/
@@ -10,3 +9,12 @@ __pycache__/
 .env
 .env.local
 .DS_Store
+
+# Private brand assets & generated episode outputs (stored in ORG-ljy/github-video-private)
+releases/
+public/images/ip/
+public/audio/*
+!public/audio/.gitkeep
+public/demos/
+data/episodes/*.json
+!data/episodes/TEMPLATE.json

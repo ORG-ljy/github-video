@@ -29,7 +29,7 @@ import urllib.request
 from pathlib import Path
 
 DEFAULT_MODEL = "FunAudioLLM/CosyVoice2-0.5B"
-DEFAULT_VOICE_URI = "speech:your-voice-name:xxxx:yyyy"
+DEFAULT_VOICE_URI = os.environ.get("SILICONFLOW_VOICE_URI", "")
 DEFAULT_BASE_URL = "https://api.siliconflow.cn/v1"
 DEFAULT_DICT_PATH = Path(__file__).resolve().parent.parent / "data" / "pronunciation-dict.json"
 
