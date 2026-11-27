@@ -77,10 +77,13 @@ function buildSubtitleCues(): SubtitleCue[] {
           lines.push(stripped);
         }
       } else {
-        // Split cleanly in half if > 14 chars
-        const mid = Math.ceil(stripped.length / 2);
-        lines.push(stripped.slice(0, mid));
-        lines.push(stripped.slice(mid));
+        // Split cleanly in half WITHOUT cutting inside an ASCII/English word (e.g. GitHub, KuroCat)
+        let mid = Math.ceil(stripped.length / 2);
+        while (mid > 2 && /[A-Za-z0-9]/.test(stripped[mid - 1]) && /[A-Za-z0-9]/.test(stripped[mid])) {
+          mid--;
+        }
+        lines.push(stripped.slice(0, mid).trim());
+        lines.push(stripped.slice(mid).trim());
       }
     }
 
