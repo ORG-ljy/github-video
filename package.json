@@ -1,0 +1,39 @@
+{
+  "name": "github-video",
+  "version": "0.1.0",
+  "private": true,
+  "description": "个人视频制作底座：基于 Remotion + FFmpeg + edge-tts 的 GitHub 一周主要工具排行与创意编程动画工作台",
+  "scripts": {
+    "dev": "remotion studio",
+    "compositions": "remotion compositions",
+    "still:vertical": "remotion still WeeklyRankingVertical out/qa/vertical-f90.png --frame=90",
+    "still:landscape": "remotion still WeeklyRankingLandscape out/qa/landscape-f90.png --frame=90",
+    "render:vertical": "remotion render WeeklyRankingVertical out/weekly-vertical.mp4",
+    "render:landscape": "remotion render WeeklyRankingLandscape out/weekly-landscape.mp4",
+    "fetch:weekly": "node scripts/fetch-github-weekly.mjs",
+    "qa:stills": "node scripts/qa-stills.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@remotion/captions": "4.0.438",
+    "@remotion/cli": "4.0.438",
+    "@remotion/media-utils": "4.0.438",
+    "@remotion/noise": "4.0.438",
+    "@remotion/paths": "4.0.438",
+    "@remotion/shapes": "4.0.438",
+    "@remotion/studio": "4.0.438",
+    "@remotion/tailwind-v4": "4.0.438",
+    "@remotion/transitions": "4.0.438",
+    "lucide-react": "^0.511.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "remotion": "4.0.438",
+    "tailwindcss": "^4.1.4",
+    "zod": "4.3.6"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "typescript": "^5.8.3"
+  }
+}

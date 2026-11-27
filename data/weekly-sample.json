@@ -1,0 +1,85 @@
+{
+  "issueTitle": "GitHub 一周热门工具排行",
+  "weekLabel": "2026 W48",
+  "subtitle": "精选本周 Star 飙升的开源效率神器与 AI 工程工具",
+  "outroTitle": "关注我，每周精选 GitHub 宝藏工具",
+  "outroSubtitle": "点赞 · 收藏 · 评论区告诉我你最想看哪个项目",
+  "introDurationSec": 2.5,
+  "itemDurationSec": 4.0,
+  "outroDurationSec": 2.0,
+  "captions": [
+    {
+      "startMs": 200,
+      "endMs": 2300,
+      "text": "这周 GitHub 又炸出几个超实用的开源神器，30 秒带你看 Top 3！"
+    },
+    {
+      "startMs": 2500,
+      "endMs": 6000,
+      "text": "第一名 Remotion，直接用 React 代码写视频，动画全靠帧数驱动。"
+    },
+    {
+      "startMs": 6200,
+      "endMs": 9800,
+      "text": "第二名 Playwright，浏览器自动化与网页截图录制一把梭。"
+    },
+    {
+      "startMs": 10000,
+      "endMs": 13600,
+      "text": "第三名 FFmpeg，音视频剪辑、压制、混音与字幕烧录的终极瑞士军刀。"
+    }
+  ],
+  "items": [
+    {
+      "rank": 1,
+      "name": "Remotion",
+      "fullName": "remotion-dev/remotion",
+      "tagline": "用 React 编写可编程视频与 MG 动画",
+      "description": "将前端组件生态直接用于视频渲染，支持确定性逐帧导出 MP4、透明通道与实时 Studio 预览。",
+      "stars": 24500,
+      "weeklyStars": 1820,
+      "language": "TypeScript",
+      "highlights": [
+        "纯帧驱动，无渲染错位",
+        "支持 Tailwind 与 Three.js",
+        "天然适配 AI 自动化批量出片",
+        "支持 9:16 竖屏与 16:9 横屏"
+      ],
+      "url": "https://github.com/remotion-dev/remotion"
+    },
+    {
+      "rank": 2,
+      "name": "Playwright",
+      "fullName": "microsoft/playwright",
+      "tagline": "现代全能浏览器自动化与录制引擎",
+      "description": "一键抓取 GitHub 项目主页高清截图、动态交互演示录屏，作为视频真实素材无缝嵌入。",
+      "stars": 72800,
+      "weeklyStars": 1240,
+      "language": "TypeScript",
+      "highlights": [
+        "跨 Chromium / WebKit / Firefox",
+        "高清截图与录屏一键生成",
+        "自动等待机制稳定不翻车",
+        "Python / Node.js 双生态支持"
+      ],
+      "url": "https://github.com/microsoft/playwright"
+    },
+    {
+      "rank": 3,
+      "name": "FFmpeg",
+      "fullName": "FFmpeg/FFmpeg",
+      "tagline": "音视频处理与自动化合成的终极底座",
+      "description": "负责多镜头无缝拼接、AI 配音与 BGM 混音、响度标准化以及高码率成片压制。",
+      "stars": 49600,
+      "weeklyStars": 890,
+      "language": "C",
+      "highlights": [
+        "多段 MP4 毫秒级无损拼接",
+        "精准控制配音与音效响度",
+        "支持硬字幕与透明通道合成",
+        "命令行一键批处理"
+      ],
+      "url": "https://github.com/FFmpeg/FFmpeg"
+    }
+  ]
+}
