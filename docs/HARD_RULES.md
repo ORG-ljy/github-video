@@ -26,9 +26,12 @@
    - 全片锁定单一主声纹 `ljy-hook-clean`（`speech:your-voice-name:xxxx:yyyy`），不叠加 `<|endofprompt|>` 情绪指令（防止语气变形与能量过载）。
    - 压缩器 `acompressor` 的 `makeup` 必须设为 `1`（线性 0dB 增益，严禁设 `2` 造成 +6dB 过载），仅在整轨拼接完成后执行**单次** `loudnorm=I=-16:TP=-2.0:LRA=11` + `alimiter=limit=-1.5dB:level=false`。
 4. **双轨发音词典（展示与口播分离）**：
-   - 画面与字幕保留原词，送入 TTS 前统一过 [data/pronunciation-dict.json](../data/pronunciation-dict.json)（已实测固化：`GitHub → get hub`、`Cursor → curser`、`DevTools → Dev Tools`、`一行 → 一航` 等）。
+   - 画面与字幕保留原词，送入 TTS 前统一过 [data/pronunciation-dict.json](../data/pronunciation-dict.json)（实测固化：**`GitHub` 必须保留原拼写透传，禁止改成 `get hub` / `Git Hub` / `Github`**；`Cursor → curser`、`DevTools → Dev Tools`、`一行 → 一航` 等）。
 5. **禁止使用高能量低频合成音效**：
    - 严禁叠加未过滤的低频正弦波重击（如 `boom.wav`），以免在手机/笔记本扬声器上听感类似噗麦爆音；切镜音效音量控制在 `0.14–0.15` 以内，BGM 控制在 `-24dB ~ -22dB`。
-6. **防吞字规则（适配 `gain: -6.0` 低电平源音频）**：
-   - 使用 `gain: -6.0` 拉取源音频后，首尾静音裁切 `silenceremove` 的阈值必须放宽至 **`-55dB`**（严禁使用 `-42dB`，否则会误切轻辅音和尾音导致吞字），淡入淡出控制在 `8ms`，且默认使用原速 **`speed: 1.0`**（避免加速压缩短词）。
+6. **防吞字与连贯度铁律（实测血泪教训）**：
+   - **必须严格使用原速 `speed: 1.0`**（实测 `1.08×` 会在 CosyVoice2 服务端造成严重吞音与韵律崩坏）。
+   - **按幕整段一次合成（每段 15–25 秒自然长句），严禁把脚本切碎成十几段 2–3 秒短句硬拼**，彻底消除起音语调割裂。
+   - **禁止使用暴力 `silenceremove` 裁切静音**（仅首尾加 `10ms` 淡入淡出），并强制用 `SenseVoiceSmall` ASR 逐字校验无吞字后再进入视频渲染。
+
 
