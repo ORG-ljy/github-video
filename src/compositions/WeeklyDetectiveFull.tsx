@@ -153,7 +153,7 @@ const DetectiveHud: React.FC<{ frame: number; tag: string; hideBadge?: boolean }
             <polygon points="8,15 16,15 19,28 5,28" fill={CRIMSON} />
           </svg>
           <div style={{ fontFamily: theme.fonts.mono, lineHeight: 1.15 }}>
-            <div style={{ fontSize: 18, fontWeight: 900, color: CRIMSON, letterSpacing: 2 }}>FILE.048</div>
+            <div style={{ fontSize: 18, fontWeight: 900, color: CRIMSON, letterSpacing: 2 }}>FILE.001</div>
             <div style={{ fontSize: 13, fontWeight: 700, color: MUTED, letterSpacing: 1 }}>{tag}</div>
           </div>
         </div>
@@ -301,7 +301,7 @@ const HeroIpFlashShot: React.FC<{ label?: string }> = ({ label }) => {
           textShadow: '4px 4px 0 #000',
         }}
       >
-        FILE.048
+        FILE.001
       </div>
       {label ? (
         <div
@@ -476,7 +476,7 @@ const Act0Open: React.FC = () => {
       <DetectiveGridBg />
       <div style={{ position: 'absolute', top: 190, left: 44, right: 110 }}>
         <div style={{ display: 'inline-block', padding: '8px 20px', backgroundColor: CRIMSON, color: WHITE, fontFamily: theme.fonts.mono, fontSize: 24, fontWeight: 900, letterSpacing: 3, boxShadow: '5px 5px 0 #000' }}>
-          2026 W48 // TOP 3 ARCHIVE
+          第 01 期 // TOP 3 ARCHIVE
         </div>
         <div style={{ marginTop: 18, fontFamily: theme.fonts.sans, fontSize: 78, fontWeight: 900, color: WHITE, lineHeight: 1.12, textShadow: '6px 6px 0 #000' }}>
           GitHub 本周<br /><span style={{ color: GOLD }}>三大离谱神作</span>
@@ -527,7 +527,7 @@ const Act0Open: React.FC = () => {
             <circle cx="115" cy="94" r="52" fill="none" stroke={CRIMSON} strokeWidth="4" />
           </svg>
           <div style={{ position: 'absolute', fontFamily: theme.fonts.mono, fontSize: 54, fontWeight: 900, color: GOLD, letterSpacing: 6, textShadow: '4px 4px 0 #000', transform: `scale(${clampInterpolate(filePop, [0, 1], [0.5, 1])})` }}>
-            FILE.048
+            FILE.001
           </div>
         </AbsoluteFill>
       ) : null}
@@ -889,7 +889,7 @@ const Act4CaseClosedOutro: React.FC = () => {
       <DetectiveGridBg />
       <div style={{ position: 'absolute', top: 190, left: 44, right: 105 }}>
         <div style={{ fontFamily: theme.fonts.mono, fontSize: 26, fontWeight: 900, color: GOLD, letterSpacing: 4 }}>
-          FILE.048 // 收藏防走丢清单
+          FILE.001 // 收藏防走丢清单
         </div>
         <div style={{ marginTop: 12, fontFamily: theme.fonts.sans, fontSize: 66, fontWeight: 900, color: WHITE, textShadow: '6px 6px 0 #000' }}>
           本周 GitHub 三大神作
