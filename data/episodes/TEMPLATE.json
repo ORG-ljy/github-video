@@ -1,0 +1,101 @@
+{
+  "episode_num": 2,
+  "episode_slug": "ep02",
+  "file_code": "FILE.002",
+  "cn_label": "第 02 期",
+  "cover": {
+    "top_tag_3x4": "FILE.002 // GITHUB 周榜第2期",
+    "top_tag_4x3": "第 02 期 // GITHUB 飙升榜",
+    "title_line1": "本周三大",
+    "title_line2": "开源神作",
+    "strip_3x4": "看点一 • 看点二 • 看点三",
+    "badge_left_3x4": "全部免费开源",
+    "badge_right_3x4": "★ XX,XXX 登顶",
+    "footer_4x3": "全部 100% 免费开源 · 建议收藏"
+  },
+  "projects": [
+    {
+      "rank": 1,
+      "repo": "owner/repo-top1",
+      "short_name": "RepoOne",
+      "stars_badge": "+10,000★",
+      "stars_text": "★10,000",
+      "headline_4x3": "榜首项目一句话爆点",
+      "one_liner": "一句大白话说明为什么炸裂 + 核心技术点",
+      "pinned_note": "一句话简介",
+      "thumb_path": null
+    },
+    {
+      "rank": 2,
+      "repo": "owner/repo-top2",
+      "short_name": "RepoTwo",
+      "stars_badge": "+5,000★",
+      "stars_text": "★5,000",
+      "headline_4x3": "第二名一句话爆点",
+      "one_liner": "一句大白话说明为什么好用 + 核心亮点",
+      "pinned_note": "一句话简介",
+      "thumb_path": null
+    },
+    {
+      "rank": 3,
+      "repo": "owner/repo-top3",
+      "short_name": "RepoThree",
+      "stars_badge": "+2,000★",
+      "stars_text": "★2,000",
+      "headline_4x3": "第三名一句话爆点",
+      "one_liner": "一句大白话说明反常识奇观",
+      "pinned_note": "一句话简介",
+      "thumb_path": null
+    }
+  ],
+  "acts": [
+    {
+      "id": "act0_open",
+      "gap_after_sec": 0.35,
+      "tts_text": "本周 GitHub 飙升榜，又冒出了三个离谱的开源神作！一个……，一个……，还有一个……！全部免费开源，档案开启，马上揭晓！",
+      "subtitle_text": "本周 GitHub 飙升榜，又冒出了三个离谱的开源神作！一个……，一个……，还有一个……！全部免费开源，档案开启，马上揭晓！"
+    },
+    {
+      "id": "act1_rank3",
+      "gap_after_sec": 0.4,
+      "tts_text": "第三名，……！",
+      "subtitle_text": "第三名，……！"
+    },
+    {
+      "id": "act2_rank2",
+      "gap_after_sec": 0.4,
+      "tts_text": "第二名，……！",
+      "subtitle_text": "第二名，……！"
+    },
+    {
+      "id": "act3_rank1",
+      "gap_after_sec": 0.4,
+      "tts_text": "第一名，本周全球榜首！……！",
+      "subtitle_text": "第一名，本周全球榜首！……！"
+    },
+    {
+      "id": "act4_outro",
+      "gap_after_sec": 0.8,
+      "tts_text": "三个神级项目清单都放在屏幕上了，建议先收藏防走丢！关注我，下周继续带你拆解 GitHub 宝藏开源，结案！",
+      "subtitle_text": "三个神级项目清单都放在屏幕上了，建议先收藏防走丢！关注我，下周继续带你拆解 GitHub 宝藏开源，结案！"
+    }
+  ],
+  "publish": {
+    "titles": [
+      {
+        "label": "连载推荐",
+        "text": "GitHub第2期｜看点一、看点二、看点三"
+      },
+      {
+        "label": "干货收藏型",
+        "text": "GitHub周榜第2期！3个免费开源神作建议收藏"
+      },
+      {
+        "label": "悬念反差型",
+        "text": "反常识提问？本周GitHub这3个免费神作太离谱！"
+      }
+    ],
+    "hashtags": "#github #开源项目 #效率神器 #电脑技巧 #黑科技 #ai工具 #vibe知识大赏",
+    "pinned_cta": "你最想先用哪一个？评论区告诉我，下期继续带你拆解 GitHub 宝藏开源！"
+  }
+}

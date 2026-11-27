@@ -1,26 +1,26 @@
 ---
-name: github-viral-video
-description: 按融合后的「Vibe 知识大赏 + 抖音高赞开源号」8 步门禁流程，制作高质量 GitHub 开源科普/精选短视频（选题过滤、事实与真素材核查、分幕脚本、单强调色视觉锁死、真实 BGM 重拍卡点、10 秒先验、Remotion/WebGL 渲染与 48kHz 零爆音交付）。
+name: github-weekly-paradigm
+description: 每周 GitHub 热榜「像素侦探档案（FILE.00X）」短视频标准化生产范式。覆盖抓榜筛选 Top 3、5 幕连贯口播、ljy-hook-clean + SenseVoiceSmall ASR 零爆音配音、Remotion 分段渲染、3:4(1080x1440) & 4:3(1440x1080) 双封面、≤30字抖音发布文案与本地仓库同步。
 ---
-# GitHub 开源爆款短视频制作规范
+# GitHub 每周热榜「像素侦探档案」标准生产范式
 
-> 完整细节与数据依据见 [`docs/VIRAL_METHODOLOGY.md`](./docs/VIRAL_METHODOLOGY.md)，音频防爆音与 Remotion 底层铁律见 [`docs/HARD_RULES.md`](./docs/HARD_RULES.md)。
+> 完整作业流程见 [`docs/WEEKLY_SOP.md`](./docs/WEEKLY_SOP.md)，品牌与视觉系统见 [`docs/DESIGN.md`](./docs/DESIGN.md)，音视频防爆音底层铁律见 [`docs/HARD_RULES.md`](./docs/HARD_RULES.md)。
 
-## 默认规格
-- **产品双轨**：A 轨「单品深度科普（六幕，90–140s，冲 30 万+ 赞）」或 B 轨「一周精选 3–5 项（90–130s，绝不硬凑 10 项）」
-- **画幅**：抖音竖屏 `1080×1920` @ 30fps（严格避开顶部 140px / 右侧 140px / 底部 280px 遮挡区）
-- **视觉 DNA**：纯近黑 `#0A0A0A` + **全片仅 1 个霓虹强调色** + 字体 ≤ 2 种 + 禁用彩色散景圆圈 + 严禁白底 GitHub 文件列表当主画面
-- **音频铁律**：48kHz 立体声、`gain=-6.0`、`-55dB` 截静音、`clips=0`、禁用合成 `boom.wav`
+## 品牌与画幅铁律（全系列永久锁定）
+- **连载编号**：`FILE.001` / `第 01 期` → `FILE.002` / `第 02 期` 递增，严禁残留上期编号。
+- **专属原创 IP**：Remix A 像素侦探少年（[`public/images/ip/remix-a-hero.jpg`](./public/images/ip/remix-a-hero.jpg)），配色锁定午夜蓝黑 `#080C16` + 档案朱红 `#E12D39` + 闪电金 `#FFD147` + 证物白 `#F5F3EA`。
+- **常驻原创 BGM**：[`public/sfx/detective-acid-jazz-112-full.wav`](./public/sfx/detective-acid-jazz-112-full.wav)（112 BPM 侦探酸爵士，零版权风险）。
+- **每期 4 件套标准交付（全部位于 `releases/epXX/`）**：
+  1. `epXX-github-weekly-1080x1920.mp4`（`1080×1920` / 30fps / 48kHz / 80–105s / `clips=0`）
+  2. `cover-epXX-3x4.png`（严格 **`1080×1440`** 抖音竖版 3:4 封面）
+  3. `cover-epXX-4x3.png`（严格 **`1440×1080`** 抖音横版 4:3 封面）
+  4. `PUBLISH_COPY.md`（标题严格 **≤30 字** + 简介 + 话题 + 置顶引流评论）
 
-## 8 步门禁流程（严禁跳步）
-1. **0. 选题过滤**：反常识？有真 Demo/可画类比？有可转发金句？不撞车？不通过立即换题。
-2. **1. 事实与素材核查**：核实 Star/协议/指标出处；优先提取 README 真实 GIF/WebP/MP4 实机演示；WebGL 鱼眼仅保留 2.5–3s 当证物。
-3. **2. 分幕脚本**：A 轨六幕（钩子→概念锚点→具象论证→硬核内核→尺度转折→升华回扣）；B 轨每项三拍（真机奇观→撞色金句/对比→2.5s 鱼眼证物）。前 3 秒至少 2 次切镜。
-4. **3. 视觉锁死**：确认单强调色 HEX + 贯穿主符号；大字与底部字幕严格互斥；单行字幕 ≤ 14 字。
-5. **4. 真实卡点表**：用脚本对实际 BGM 做 onset/beat 检测（不猜 BPM），输出 `镜头 | 起止秒 | 字幕 | 画面 | 重拍点 | 音效` 总表。
-6. **5. 音效分层**：前 0.5s 轻提示音；关键动作配干净叮咚/弹拨/扫频；普通过渡不配音。
-7. **6. 10 秒门禁先验**：**先只做开头 10 秒**，输出内嵌可播 HTML 给用户验收节奏/字体/卡点/配色；通过后再逐段制作与渲染。
-8. **7. 终检交付**：抽帧接触表目检 + 48kHz 波形 `clips=0` 检测 + 15 条自检清单全勾 + 附抖音标题/封面/话题分发清单。
-
-## 沟通原则
-- 先给结论或可执行下一步；需要用户拍板时，一次只问一件事。
+## 6 步标准化流水线（严禁跳步）
+1. **抓榜选 3 强**：跑 `node scripts/fetch-github-weekly.mjs`，挑 3 个高视觉反差/有真 Demo 的项目（倒序 #03 → #02 → #01），绝不硬凑 10 个，绝不拿白底代码列表当主画面。
+2. **填本期配置**：复制 `data/episodes/TEMPLATE.json` → `data/episodes/epXX.json`，编写 5 幕自然整段口播（保留原生 `GitHub` 拼写，缩写/数字口语化）。
+3. **5 幕整段配音 + ASR 门禁**：跑 `python3 scripts/build-episode-audio.py data/episodes/epXX.json`（强制 `ljy-hook-clean`、`speed=1.0`、`gain=-6.0`、无损 `wav`、**禁用 `silenceremove`**、`SenseVoiceSmall` ASR 逐字校验、单次 `loudnorm` + `aresample=48000`、`clips=0`）。
+4. **Remotion 两段渲染 + 静帧 QA**：先出关键帧核验期号/字幕（单行 ≤14 字、**禁止英文单词中间断行**、与大字互斥），再分两段 `--muted` 渲染并用 FFmpeg `-c:v copy` 无损拼接合流 48kHz 音频。
+5. **一键出双封面与文案**：跑 `python3 scripts/render-covers.py data/episodes/epXX.json`，自动输出 `3:4` + `4:3` 封面与 `≤30字` 校验通过的 `PUBLISH_COPY.md`，并肉眼核验封面零裁切/零重叠。
+6. **交付与本地同步**：生成 ≤2MB 内嵌预览 HTML 给用户确认，推送 `origin main`，给出本地一键拉取命令：
+   `cd "E:\AI-工作目录\零散任务\灵枢AI\2.github-video\github-video"; git pull origin main`
