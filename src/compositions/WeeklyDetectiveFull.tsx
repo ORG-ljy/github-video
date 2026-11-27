@@ -16,7 +16,16 @@ import { clampInterpolate } from '../kit/motion';
 import { theme } from '../kit/theme';
 import { FisheyeCanvas } from '../kit/fisheye/FisheyeCanvas';
 
-export const WEEKLY_DETECTIVE_FULL_FRAMES = 2850; // 95.0s @ 30fps
+const segMap = Object.fromEntries(
+  timelineData.map((s) => {
+    const startF = Math.round((s.startMs / 1000) * 30);
+    const endF = Math.round((s.endMs / 1000) * 30);
+    return [s.id, { startF, endF, dur: Math.max(1, endF - startF) }];
+  })
+);
+
+export const WEEKLY_DETECTIVE_FULL_FRAMES =
+  Math.ceil((timelineData[timelineData.length - 1].endMs / 1000) * 30) + 24;
 
 // Strict DESIGN.md palette
 const BG = '#080C16';
@@ -40,9 +49,12 @@ function buildSubtitleCues(): SubtitleCue[] {
   for (const seg of timelineData) {
     if (hiddenIds.has(seg.id)) continue;
 
-    // Special case for a0_punch: first half (282-326) is crimson kinetic -> hide; second half (326-369) shows IP reveal subtitle
+    // Special case for a0_punch: first half is crimson kinetic -> hide; second half shows IP reveal subtitle
     if (seg.id === 'a0_punch') {
-      cues.push({ startFrame: 326, endFrame: 368, text: '档案开启，马上揭晓！' });
+      const sF = Math.round((seg.startMs / 1000) * 30);
+      const eF = Math.round((seg.endMs / 1000) * 30);
+      const midF = sF + Math.round((eF - sF) * 0.5);
+      cues.push({ startFrame: midF, endFrame: eF, text: '档案开启，马上揭晓！' });
       continue;
     }
 
@@ -943,55 +955,77 @@ export const WeeklyDetectiveFull: React.FC = () => {
   const frame = useCurrentFrame();
   const cues = useMemo(() => buildSubtitleCues(), []);
 
+  const a0OpenEnd = segMap.a0_preview.startF;
+  const a0PrevStart = segMap.a0_preview.startF;
+  const a0PrevDur = segMap.a0_punch.startF - a0PrevStart;
+  const p1 = Math.round(a0PrevDur * 0.32);
+  const p2 = Math.round(a0PrevDur * 0.32);
+  const p3 = a0PrevDur - p1 - p2;
+
+  const a0PunchStart = segMap.a0_punch.startF;
+  const a0PunchTotal = segMap.a1_c3_hook.startF - a0PunchStart;
+  const a0KinDur = Math.round(a0PunchTotal * 0.5);
+  const a0IpDur = a0PunchTotal - a0KinDur;
+
+  const c3HookStart = segMap.a1_c3_hook.startF;
+  const c3ClueStart = segMap.a1_c3_clue.startF;
+  const c3PunchStart = segMap.a1_c3_punch.startF;
+  const c3EvStart = segMap.a1_c3_ev.startF;
+
+  const c2CatStart = segMap.a2_c2_cat.startF;
+  const c2WhaleStart = segMap.a2_c2_whale.startF;
+  const c2TechStart = segMap.a2_c2_tech.startF;
+  const c2EvStart = segMap.a2_c2_ev.startF;
+
+  const c1HookStart = segMap.a3_c1_hook.startF;
+  const c1IpDur = 36;
+  const c1ClueStart = segMap.a3_c1_clue.startF;
+  const c1PunchStart = segMap.a3_c1_punch.startF;
+  const c1EvStart = segMap.a3_c1_ev.startF;
+
+  const outroStart = segMap.a4_outro.startF;
+  const outroDur = WEEKLY_DETECTIVE_FULL_FRAMES - outroStart;
+
   const hideBadge =
     frame < 28 ||
-    (frame >= 282 && frame < 369) ||
-    (frame >= 878 && frame < 968) ||
-    (frame >= 1883 && frame < 1918) ||
-    (frame >= 2382 && frame < 2472) ||
-    frame >= 2785;
+    (frame >= a0PunchStart && frame < c3HookStart) ||
+    (frame >= c3PunchStart && frame < c3EvStart) ||
+    (frame >= c1HookStart && frame < c1HookStart + c1IpDur) ||
+    (frame >= c1PunchStart && frame < c1EvStart) ||
+    frame >= outroStart + 180;
 
   const hudTag =
-    frame < 369
+    frame < c3HookStart
       ? 'GITHUB WEEKLY'
-      : frame < 1100
+      : frame < c2CatStart
         ? 'CASE #03 · NOSPEAKER'
-        : frame < 1883
+        : frame < c1HookStart
           ? 'CASE #02 · KUROCAT'
-          : frame < 2605
+          : frame < outroStart
             ? 'CASE #01 · VICTORY'
             : 'CASE CLOSED';
 
   return (
     <AbsoluteFill style={{ backgroundColor: BG, overflow: 'hidden' }}>
-      {/* ACT 0: 黄金开场 (0 - 369) */}
-      <Sequence from={0} durationInFrames={125}><Act0Open /></Sequence>
-      <Sequence from={125} durationInFrames={50}>
-        {/* S2a 快速预览 nospeaker */}
-        <Act1Case3ClueBoard />
-      </Sequence>
-      <Sequence from={175} durationInFrames={50}>
-        {/* S2b 快速预览 KuroCat 真机 */}
-        <Act2KuroCatRealMonitor />
-      </Sequence>
-      <Sequence from={225} durationInFrames={57}>
-        {/* S2c 快速预览 VIctory */}
-        <Act3VictoryStars />
-      </Sequence>
-      <Sequence from={282} durationInFrames={44}>
+      {/* ACT 0: 黄金开场 */}
+      <Sequence from={0} durationInFrames={a0OpenEnd}><Act0Open /></Sequence>
+      <Sequence from={a0PrevStart} durationInFrames={p1}><Act1Case3ClueBoard /></Sequence>
+      <Sequence from={a0PrevStart + p1} durationInFrames={p2}><Act2KuroCatRealMonitor /></Sequence>
+      <Sequence from={a0PrevStart + p1 + p2} durationInFrames={p3}><Act3VictoryStars /></Sequence>
+      <Sequence from={a0PunchStart} durationInFrames={a0KinDur}>
         <CrimsonKineticShot badge="GITHUB OPEN SOURCE" line1="全部免费开源" />
       </Sequence>
-      <Sequence from={326} durationInFrames={43}>
+      <Sequence from={a0PunchStart + a0KinDur} durationInFrames={a0IpDur}>
         <HeroIpFlashShot />
       </Sequence>
 
-      {/* ACT 1: CASE #03 nospeaker (369 - 1100) */}
-      <Sequence from={369} durationInFrames={194}><Act1Case3LaptopHook /></Sequence>
-      <Sequence from={563} durationInFrames={315}><Act1Case3ClueBoard /></Sequence>
-      <Sequence from={878} durationInFrames={90}>
+      {/* ACT 1: CASE #03 nospeaker */}
+      <Sequence from={c3HookStart} durationInFrames={c3ClueStart - c3HookStart}><Act1Case3LaptopHook /></Sequence>
+      <Sequence from={c3ClueStart} durationInFrames={c3PunchStart - c3ClueStart}><Act1Case3ClueBoard /></Sequence>
+      <Sequence from={c3PunchStart} durationInFrames={c3EvStart - c3PunchStart}>
         <CrimsonKineticShot badge="CASE #03 // TRUTH" line1="不用外放喇叭" line2="触控板直接唱歌！" />
       </Sequence>
-      <Sequence from={968} durationInFrames={132}>
+      <Sequence from={c3EvStart} durationInFrames={c2CatStart - c3EvStart}>
         <FisheyeVerifiedShot
           repo="os6/nospeaker"
           imageSrc="images/top10/rank-3.png"
@@ -1002,11 +1036,11 @@ export const WeeklyDetectiveFull: React.FC = () => {
         />
       </Sequence>
 
-      {/* ACT 2: CASE #02 KuroCat (1100 - 1883) */}
-      <Sequence from={1100} durationInFrames={282}><Act2KuroCatRealMonitor /></Sequence>
-      <Sequence from={1382} durationInFrames={144}><Act2KuroCatWhaleDemo /></Sequence>
-      <Sequence from={1526} durationInFrames={231}><Act2KuroCatPrivacyAndSize /></Sequence>
-      <Sequence from={1757} durationInFrames={126}>
+      {/* ACT 2: CASE #02 KuroCat */}
+      <Sequence from={c2CatStart} durationInFrames={c2WhaleStart - c2CatStart}><Act2KuroCatRealMonitor /></Sequence>
+      <Sequence from={c2WhaleStart} durationInFrames={c2TechStart - c2WhaleStart}><Act2KuroCatWhaleDemo /></Sequence>
+      <Sequence from={c2TechStart} durationInFrames={c2EvStart - c2TechStart}><Act2KuroCatPrivacyAndSize /></Sequence>
+      <Sequence from={c2EvStart} durationInFrames={c1HookStart - c2EvStart}>
         <FisheyeVerifiedShot
           repo="qianyiai/KuroCat"
           imageSrc="images/top10/rank-6.png"
@@ -1017,16 +1051,18 @@ export const WeeklyDetectiveFull: React.FC = () => {
         />
       </Sequence>
 
-      {/* ACT 3: CASE #01 VIctory (1883 - 2605) */}
-      <Sequence from={1883} durationInFrames={35}>
-        <HeroIpFlashShot label="冠军悬案 · 全球登顶！" />
+      {/* ACT 3: CASE #01 VIctory */}
+      <Sequence from={c1HookStart} durationInFrames={c1IpDur}>
+        <HeroIpFlashShot label="本周第一 · 全球登顶！" />
       </Sequence>
-      <Sequence from={1918} durationInFrames={170}><Act3VictoryStars /></Sequence>
-      <Sequence from={2088} durationInFrames={294}><Act3VictoryClueFlow /></Sequence>
-      <Sequence from={2382} durationInFrames={90}>
+      <Sequence from={c1HookStart + c1IpDur} durationInFrames={c1ClueStart - (c1HookStart + c1IpDur)}>
+        <Act3VictoryStars />
+      </Sequence>
+      <Sequence from={c1ClueStart} durationInFrames={c1PunchStart - c1ClueStart}><Act3VictoryClueFlow /></Sequence>
+      <Sequence from={c1PunchStart} durationInFrames={c1EvStart - c1PunchStart}>
         <CrimsonKineticShot badge="GLOBAL TOP 1" line1="官方还没出 PC 版？" line2="开源极客自己搬！" />
       </Sequence>
-      <Sequence from={2472} durationInFrames={133}>
+      <Sequence from={c1EvStart} durationInFrames={outroStart - c1EvStart}>
         <FisheyeVerifiedShot
           repo="Marvisak/VIctory"
           imageSrc="images/top10/rank-1.png"
@@ -1037,13 +1073,12 @@ export const WeeklyDetectiveFull: React.FC = () => {
         />
       </Sequence>
 
-      {/* ACT 4: 结案收尾 (2605 - 2850) */}
-      <Sequence from={2605} durationInFrames={245}><Act4CaseClosedOutro /></Sequence>
+      {/* ACT 4: 结案收尾 */}
+      <Sequence from={outroStart} durationInFrames={outroDur}><Act4CaseClosedOutro /></Sequence>
 
       <DetectiveHud frame={frame} tag={hudTag} hideBadge={hideBadge} />
       <PixelSubtitleBar cues={cues} frame={frame} />
 
-      {/* 音频说明：渲染时走 --muted 分段无损渲染，最终用 FFmpeg 48kHz 精准混音人声 + 112 BPM 轻爵士 BGM + 关键动作点音 */}
       <Audio src={staticFile('audio/weekly-detective-full.mp3')} volume={0.95} />
       <Audio src={staticFile('sfx/detective-acid-jazz-112-full.wav')} volume={0.22} />
     </AbsoluteFill>
