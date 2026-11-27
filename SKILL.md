@@ -18,7 +18,7 @@ description: 每周 GitHub 热榜「像素侦探档案（FILE.00X）」短视频
 1. **抓榜选 3 强**：跑 `node scripts/fetch-github-weekly.mjs`，挑 3 个高视觉反差/有真 Demo 的项目（倒序 #03 → #02 → #01），绝不硬凑 10 个，绝不拿白底代码列表当主画面。
 2. **填本期配置**：复制 `data/episodes/TEMPLATE.json` 到私有仓 `../github-video-private/episodes/epXX/epXX.json`，编写 5 幕自然整段口播（保留原生 `GitHub` 拼写，缩写/数字口语化）。
 3. **5 幕整段配音 + ASR 门禁**：跑 `python3 scripts/build-episode-audio.py ../github-video-private/episodes/epXX/epXX.json`（强制 `.env` 声纹、`speed=1.0`、`gain=-6.0`、无损 `wav`、**禁用 `silenceremove`**、`SenseVoiceSmall` ASR 逐字校验、单次 `loudnorm` + `aresample=48000`、`clips=0`）。
-4. **Remotion 两段渲染 + 静帧 QA**：先出关键帧核验 `FILE.00X` 期号/字幕（单行 ≤14 字、**禁止英文单词中间断行**、与大字互斥），再分两段 `--muted` 渲染并用 FFmpeg `-c:v copy` 无损拼接合流 48kHz 音频输出至私有仓 `../github-video-private/episodes/epXX/`。
+4. **Remotion 两段渲染 + 静帧 QA**：先出关键帧核验 `FILE.00X` 期号、**全面屏防裁切安全区（`left ≥ 108px`、`right ≥ 160px`、`top ≥ 160px`、`bottom ≥ 400px`，所有文字/角标/卡片必须在 `x ∈ [108, 920]` 内）** 与字幕（单行 ≤13 字、**禁止英文单词中间断行**、与大字互斥），再分两段 `--muted` 渲染并用 FFmpeg `-c:v copy` 无损拼接合流 48kHz 音频输出至私有仓 `../github-video-private/episodes/epXX/`。
 5. **一键出双封面与文案**：跑 `python3 scripts/render-covers.py ../github-video-private/episodes/epXX/epXX.json`，默认直出私有仓 `3:4` + `4:3` 封面与 `≤30字` 校验通过的 `PUBLISH_COPY.md`，并肉眼核验零裁切/零重叠。
 6. **交付与私有仓同步**：生成 ≤2MB 内嵌预览 HTML 给用户确认，**仅推送成品到私有仓 `ORG-ljy/github-video-private`**，给出本地一键拉取命令：
    `cd "E:\AI-工作目录\零散任务\灵枢AI\2.github-video\github-video-private"; git pull origin main`
